@@ -1,0 +1,16 @@
+{
+  "event_type": "string",             // e.g., "traffic_jam", "rally", "weather", "holiday"
+  "description": "string",           // Summary of the event
+  "location": {
+    "name": "string",                // Area name or zone (e.g., "Koramangala", "Whitefield")
+    "coordinates": {
+      "lat": "float",
+      "lon": "float"
+    }
+  },
+  "source": "string",                // e.g., "twitter", "news", "bmrtc", "weatherapi"
+  "timestamp": "ISO 8601 string",    // When the event was observed/reported
+  "severity": "low | medium | high", // Optional, if applicable
+  "tags": ["optional", "tags"],      // e.g., ["transport", "public", "delay"]
+  "extra_data": {}                   // Source-specific fields (flexible)
+}
