@@ -14,7 +14,7 @@ def read_summary_file() -> str:
         str: The content of the summary file.
     """
     try:
-        file_path = "app\\core\\config\\workflows\\ingestion_workflow\\sub_agents\\ingestion_agent\\news_summary.csv"
+        file_path = "app\\core\\workflows\\ingestion_workflow\\sub_agents\\ingestion_agent\\news_summary.csv"
         df = pd.read_csv(file_path)
         if df.empty:
             return "The summary file is empty."
