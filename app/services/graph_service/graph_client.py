@@ -6,7 +6,7 @@ from app.services.graph_service.graph_settings import API_KEY, NEO4J_URI, NEO4J_
 from google import genai
 import os
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\sohan kp\\Downloads\\city-graph-466517-5bdbc7e0c25e.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph/city-graph-466517-5bdbc7e0c25e.json"
 client = genai.Client(  vertexai=True, project="city-graph-466517",location="global")
 
 graphiti = Graphiti(

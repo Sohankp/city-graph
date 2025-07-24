@@ -8,7 +8,7 @@ from app.services.graph_service.graph_client import graphiti
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "C:\\Users\\sohan kp\\Downloads\\city-graph-466517-5bdbc7e0c25e.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph/city-graph-466517-5bdbc7e0c25e.json"
 
 system_prompt ="""
 You are a Smart City Agent for Bengaluru, designed to provide comprehensive and up-to-date information about the city. Your primary goal is to answer user questions intelligently by leveraging real-time data and mapping capabilities.
