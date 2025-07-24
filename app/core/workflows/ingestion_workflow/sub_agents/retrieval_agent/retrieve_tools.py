@@ -1,4 +1,32 @@
 from app.services.graph_service.graph_client import graphiti
+import requests
+import polyline
+from google import genai
+from google.genai.types import HttpOptions
+from google.adk.agents import Agent
+
+API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"  # Replace securely or use env var
+
+client = genai.Client(  vertexai=True, project="city-graph-466517",location="global")
+prompt ="""
+You are an intelligent assistant tasked with interpreting raw data retrieved from a graph database to answer a specific user question about Bengaluru.
+
+**Original User Query:**
+{original_user_query}
+
+**Retrieved Graph Data (Key-value pairs of UUIDs to facts, valid_at, invalid_at):**
+{retrieved_data_from_graph}
+
+**Instructions:**
+1.  Analyze the "Retrieved Graph Data" thoroughly, focusing on the `fact` field for each entry.
+2.  Identify and extract *only* the information that is directly relevant to answering the "Original User Query." Prioritize information from the most recent or top-ranked chunks if provided, as they are typically more relevant.
+3.  Synthesize the relevant information into a clear, concise, and natural language answer.
+4.  **Crucially, do NOT include any information from the "Retrieved Graph Data" that is not directly related to the "Original User Query."** Filter out extraneous details.
+5.  If the retrieved data does not contain sufficient information to answer the query, state clearly that you could not find enough relevant information.
+6.  Format any numerical values or scientific notation using LaTeX (e.g., `$2.5 \text{ km}$`, `$$10^6 \text{ people}$$`).
+
+**Your Answer:**
+"""
 
 async def retrieve_from_graph(query:str)-> str:
     """Retrieves data from the graph based on the provided query and optional node UUId"""
@@ -30,10 +58,80 @@ async def retrieve_from_graph(query:str)-> str:
                 "invalid_at": result.invalid_at if hasattr(result, 'invalid_at') else None
             }
         print(response_dict,'response_dict')
-        return str(response_dict)
-    
+        prompt_filled = prompt.replace("{original_user_query}", query)
+        prompt_filled = prompt_filled.replace("{retrieved_data_from_graph}", str(response_dict))
+        response = client.models.generate_content(
+                        model="gemini-2.5-flash",
+                        contents=prompt_filled,
+                    )
+        print(response.text.strip())
+        return str(response.text.strip())
     
 
 
+async def get_route_areas(origin: str, destination: str) -> str:
+    """
+    Computes a driving route between origin and destination, extracts distance, duration,
+    and reverse-geocodes areas along the route (every 10th coordinate).
+    Returns a plain string summary.
+
+    Args:
+        origin (str): Origin address.
+        destination (str): Destination address.
+
+    Returns:
+        str: Summary of distance, duration, and areas passed.
+    """
+    route_url = f"https://routes.googleapis.com/directions/v2:computeRoutes?key={API_KEY}"
+    headers = {
+        "Content-Type": "application/json",
+        "X-Goog-FieldMask": "routes.distanceMeters,routes.duration,routes.polyline.encodedPolyline"
+    }
+    payload = {
+        "origin": {"address": origin},
+        "destination": {"address": destination},
+        "travelMode": "DRIVE",
+        "routingPreference": "TRAFFIC_AWARE"
+    }
+
+    route_response = requests.post(route_url, headers=headers, json=payload)
+
+    if route_response.status_code != 200:
+        return f"Route API error: {route_response.status_code}, {route_response.text}"
+
+    data = route_response.json()
+    route = data["routes"][0]
+
+    distance_km = route["distanceMeters"] / 1000
+    duration = route["duration"]
+
+    encoded_poly = route["polyline"]["encodedPolyline"]
+    coordinates = polyline.decode(encoded_poly)
+
+    visited_areas = set()
+    areas_on_route = []
+
+    for i, (lat, lng) in enumerate(coordinates[::10]):  # sample every 10th point
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?latlng={lat},{lng}&key={API_KEY}"
+        geo_response = requests.get(geocode_url)
+
+        if geo_response.status_code == 200:
+            geo_data = geo_response.json()
+            if geo_data["results"]:
+                for component in geo_data["results"][0]["address_components"]:
+                    if "sublocality" in component["types"] or "locality" in component["types"]:
+                        area_name = component["long_name"]
+                        if area_name not in visited_areas:
+                            visited_areas.add(area_name)
+                            areas_on_route.append(area_name)
+                        break
+
+    summary = (
+        f"Route from {origin} to {destination}:\n"
+        f"Distance: {round(distance_km, 2)} km\n"
+        f"Duration: {duration}\n"
+        f"Areas on route: {', '.join(areas_on_route) if areas_on_route else 'None found'}"
+    )
+    return summary
 
     

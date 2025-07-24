@@ -93,7 +93,7 @@ def scrape_bangalore_news() -> str:
     analyzes relevance using Gemini, and returns readable summaries.
     Returns:
         str: A string in the below format
-        - summary: 2–3 line event summary
+        - summary: 2-3 line event summary
         - category: Traffic, Civic Issue, Politics, etc.
         - timestamp: oFrom article or today's date
         - sentiment: Psitive/Negative/Neutral

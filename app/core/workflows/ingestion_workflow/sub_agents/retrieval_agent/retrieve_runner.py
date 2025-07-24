@@ -13,7 +13,7 @@ initial_state = {
     "interaction_history": [],
 }
 
-async def extraction_pipeline():
+async def extraction_pipeline(query:str):
     APP_NAME = "City Graph"
     USER_ID = "aiwithbrandon"
     new_session = await session_service.create_session(
@@ -28,7 +28,7 @@ async def extraction_pipeline():
         app_name=APP_NAME,
         session_service=session_service,
     )
-    user_input = "Give me update on political rally?"
+    user_input = query
 
     await add_user_query_to_history(
             session_service, APP_NAME, USER_ID, SESSION_ID, user_input
@@ -41,5 +41,9 @@ async def extraction_pipeline():
     )
 
     print("\nFinal Session State:")
+    interaction_history = final_session.state.get("interaction_history", [])
+    print("Interaction History:", interaction_history)
     for key, value in final_session.state.items():
         print(f"{key}: {value}")
+
+    return interaction_history[-1]['response'] 
