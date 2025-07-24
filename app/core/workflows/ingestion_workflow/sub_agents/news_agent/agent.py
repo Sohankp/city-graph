@@ -16,7 +16,8 @@ model = genai.GenerativeModel("gemini-2.5-pro")
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 NEWS_SOURCES = [
     "https://www.thehindu.com/news/cities/bangalore/",
-    "https://timesofindia.indiatimes.com/city/bangalore"
+    "https://timesofindia.indiatimes.com/city/bangalore",
+    "https://indianexpress.com/section/cities/bangalore/"
 ]
 
 
@@ -30,8 +31,14 @@ def extract_links(source_url):
             return [tag.a["href"] for tag in articles if tag.a]
         elif "timesofindia" in source_url:
             return [a["href"] for a in soup.select("a[href*='/city/bengaluru/']") if a.get("href")]
+        # elif "btp" in source_url:
+        #     for div in soup.find_all('div', class_='scroll-content3'):
+        #         links = [a_tag["href"] for a_tag in div.find_all('a', href=True)]
+        #     return links
         elif "indianexpress" in source_url:
-            return [a["href"] for a in soup.select("a.card") if a.get("href")]
+            articles = soup.find_all("li") 
+            links = [tag.a["href"] for tag in articles if tag.a and "/article/cities/bangalore/" in tag.a["href"]]
+            return links
     except:
         return []
 
@@ -109,7 +116,7 @@ def scrape_bangalore_news() -> str:
     results = []
     for source in NEWS_SOURCES:
         links = extract_links(source)
-        for link in links[:2]:  # Limit to 5 per site
+        for link in links:  
             content = extract_article_content(link)
             if not content:
                 continue
@@ -129,7 +136,7 @@ root_agent = Agent(
     name="bangalore_news_agent",
     model="gemini-2.0-flash",
     description=("Agent that fetches and summarizes latest Bangalore-related news using web scraping and Gemini."),
-    instruction=("When the user asks for Bangalore news, scrape news sites and Provide whatever ouput the gemini gives"),
+    #instruction=("When the user asks for Bangalore news, scrape news sites and Provide whatever ouput the gemini gives"),
     instruction = (""""
         When the user asks for Bangalore or Bengaluru news, events, civic issues, or latest updates, 
         call the `scrape_bangalore_news` tool and respond with detailed summaries for each news item, 
