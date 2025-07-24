@@ -1,8 +1,9 @@
-# import pandas as pd
 from google.adk.agents import Agent
-# import os
 from pydantic import RootModel
 from typing import Dict, List
+from datetime import datetime
+from app.services.graph_service.graph_client import graphiti
+from app.services.graph_service.graph_schemas import entity_types, edge_types, edge_type_map
 
 class NewsContent(RootModel[Dict[str, List[str]]]):
     pass
@@ -25,8 +26,16 @@ def ingest_news(news_content: NewsContent) -> str:
     for category in news_content.keys():
         for article in news_content[category]:
             print(f"Ingesting article in category '{category}': {article}")
-            # Here you would add the logic to ingest the article into your database.
-            # For example, you might call a function that interacts with your database API.
+            graphiti.add_episode(
+                name="City Update",
+                episode_body=article,
+                source_description="Banglore city news updates",
+                reference_time=datetime.now(),
+                group_id=category,
+                entity_types=entity_types,
+                edge_types=edge_types,
+                edge_type_map=edge_type_map
+            )
     return "News content ingested successfully."
 
 system_prompt = """
@@ -35,7 +44,11 @@ Strictly do not ask for a user input or any permission.
 Follow these steps:
 
 1. Understand the news file, weather and social media summary.
-2. Condense each entry, preserving all essential facts.
+2. Summarize each entry, preserving all essential facts that includes
+        - timestamp: date of event
+        - sentiment: Positive/Negative/Neutral
+        - location: Primary location + nearby areas
+        - advisory: Any advisories or warnings
 3. Detect any overlapping or repeated news items; keep one instance only.
 4. Assign each news item to one of the following categories:
     - Weather
@@ -60,6 +73,7 @@ Follow these steps:
 below is the data:
     news summary: {news_summary}
     weather summary: {weather_summary}
+    social media summary: {social_media_summary}
 
 Your job:
     Turn the raw news file into clean, non-duplicated, categorized records as per above format.
@@ -74,5 +88,3 @@ summary_agent = Agent(
     instruction=system_prompt,
     tools=[ingest_news],
 )
-
-# social media summary: {social_media_summary}

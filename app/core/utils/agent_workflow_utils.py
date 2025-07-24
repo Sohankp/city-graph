@@ -256,7 +256,7 @@ async def call_agent_async(runner, user_id, session_id, query):
 
     # Add the agent response to interaction history if we got a final response
     if final_response_text and agent_name:
-        add_agent_response_to_history(
+        await add_agent_response_to_history(
             runner.session_service,
             runner.app_name,
             user_id,

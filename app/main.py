@@ -13,7 +13,7 @@ scheduler = AsyncIOScheduler()
 async def lifespan(app: FastAPI):
     # Code to run on startup
     print("Starting up the City Graph API...")
-    scheduler.add_job(ingestion_pipeline, CronTrigger(minute=6))  # every hour at minute 0
+    scheduler.add_job(ingestion_pipeline, CronTrigger(minute=0))  # every hour at minute 0
     scheduler.start()
     yield
     # Code to run on shutdown

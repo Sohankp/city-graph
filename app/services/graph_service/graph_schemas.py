@@ -25,3 +25,22 @@ class ReportedBy(BaseModel):
 class Nearby(BaseModel):
     distance_km: float | None = None  # Optional
     """Connects Area -> Area"""
+
+
+entity_types = {
+        "Event": Event,
+        "Area": Area,
+        "Source": Source
+    }
+
+edge_types = {
+        "HAPPENED_AT": HappenedAt,
+        "REPORTED_BY": ReportedBy,
+        "NEARBY": Nearby
+    }
+
+edge_type_map = {
+        ("Event", "Area"): ["HAPPENED_AT"],
+        ("Event", "Source"): ["REPORTED_BY"],
+        ("Area", "Area"): ["NEARBY"]
+    }

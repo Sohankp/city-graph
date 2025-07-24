@@ -10,7 +10,7 @@ from .sub_agents.news_agent.agent import news_agent
 
 gather_data = ParallelAgent(
     name="ConcurrentDataFetch",
-    sub_agents=[news_agent, weather_agent]
+    sub_agents=[news_agent, social_media_agent, weather_agent]
 )
 
 root_agent = SequentialAgent(
