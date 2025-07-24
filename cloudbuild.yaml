@@ -5,12 +5,12 @@ steps:
   # This step builds the Docker image using the Dockerfile in the current directory.
   # The image is tagged with the Artifact Registry path, using the project ID and short commit SHA.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'global-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA', '.']
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA', '.']
 
   # 2. Push the container image to Artifact Registry
   # This step pushes the tagged image to your Artifact Registry repository.
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'global-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA']
+  args: ['push', 'asia-south1-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA']
 
   # 3. Deploy the container image to Cloud Run
   # This step uses the gcloud CLI to deploy the image.
@@ -34,7 +34,7 @@ steps:
 # This tells Cloud Build to store the built image in Artifact Registry.
 # It helps with vulnerability scanning.
 images:
-  - 'global-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA'
+  - 'asia-south1-docker.pkg.dev/$city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA'
 
 # This options block fixes the error you encountered.
 # It directs all build logs to Cloud Logging instead of a storage bucket.
