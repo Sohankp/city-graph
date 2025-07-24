@@ -28,7 +28,7 @@ async def extraction_pipeline():
         app_name=APP_NAME,
         session_service=session_service,
     )
-    user_input = "Which areas have traffic jam right now?"
+    user_input = "Give me update on political rally?"
 
     await add_user_query_to_history(
             session_service, APP_NAME, USER_ID, SESSION_ID, user_input
