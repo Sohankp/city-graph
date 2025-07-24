@@ -25,7 +25,7 @@ steps:
     - 'managed'
     - '--allow-unauthenticated'
     - '--service-account'
-    - 'kpsaisohan@gmail.com' # <-- (Required) The email of the service account for Cloud Run
+    - '1081552206448-compute@developer.gserviceaccount.com' # <-- (Required) The email of the service account for Cloud Run
 
 images:
   - 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-repo/fastapi-app:$SHORT_SHA'
