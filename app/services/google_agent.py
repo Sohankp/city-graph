@@ -17,7 +17,7 @@ async def ingestion_pipeline():
     APP_NAME = "City Graph"
     USER_ID = "aiwithbrandon" # not sure which user id to use
 
-    new_session = session_service.create_session(
+    new_session = await session_service.create_session(
         app_name=APP_NAME,
         user_id=USER_ID,
         state=initial_state,
@@ -31,14 +31,14 @@ async def ingestion_pipeline():
         session_service=session_service,
     )
 
-    user_input = "Fetch recent news articles and social media posts related to traffic in Bangalore."
+    user_input = "Ingest the data" 
 
     add_user_query_to_history(
             session_service, APP_NAME, USER_ID, SESSION_ID, user_input
         )
     await call_agent_async(runner, USER_ID, SESSION_ID, user_input)
 
-    final_session = session_service.get_session(
+    final_session = await session_service.get_session(
         app_name=APP_NAME, user_id=USER_ID, session_id=SESSION_ID
     )
 

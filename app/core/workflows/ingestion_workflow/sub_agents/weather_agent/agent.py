@@ -4,7 +4,7 @@ import json
 import os
 from google.adk.agents import Agent
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\Rajat\\github\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 # --- API KEYS ---
 GOOGLE_MAPS_API_KEY = 'AIzaSyBqXRmYQJPiIUFXKt0Z125e4fgES-hszRg'
 WEATHERAPI_KEY = 'a7b796a8885b4e78af3103559251907'

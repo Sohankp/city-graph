@@ -63,7 +63,7 @@ async def update_interaction_history(session_service, app_name, user_id, session
         updated_state["interaction_history"] = interaction_history
 
         # Create a new session with updated state
-        session_service.create_session(
+        await session_service.create_session(
             app_name=app_name,
             user_id=user_id,
             session_id=session_id,
