@@ -9,7 +9,7 @@ class NewsContent(RootModel[Dict[str, List[str]]]):
     pass
 
 
-def ingest_news(news_content: NewsContent) -> str:
+async def ingest_news(news_content: NewsContent) -> str:
     """Ingests the news content into the database.
 
     Args:
@@ -26,7 +26,7 @@ def ingest_news(news_content: NewsContent) -> str:
     for category in news_content.keys():
         for article in news_content[category]:
             print(f"Ingesting article in category '{category}': {article}")
-            graphiti.add_episode(
+            await graphiti.add_episode(
                 name="City Update",
                 episode_body=article,
                 source_description="Banglore city news updates",
