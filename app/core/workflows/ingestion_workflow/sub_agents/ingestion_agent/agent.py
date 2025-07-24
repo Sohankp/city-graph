@@ -5,11 +5,11 @@ from datetime import datetime
 from app.services.graph_service.graph_client import graphiti
 from app.services.graph_service.graph_schemas import entity_types, edge_types, edge_type_map
 
-class NewsContent(RootModel[Dict[str, List[str]]]):
+class NewsContent(Dict[str, List[str]]):
     pass
 
 
-async def ingest_news(news_content: NewsContent) -> str:
+async def ingest_news(news_content: dict) -> str:
     """Ingests the news content into the database.
 
     Args:
