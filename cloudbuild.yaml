@@ -22,9 +22,9 @@ steps:
     - 'deploy'
     - 'city-graph-apis-deployment' # <-- The name you want for your Cloud Run service
     - '--image'
-    - 'global-docker.pkg.dev/city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA'
+    - 'asia-south1-docker.pkg.dev/city-graph-466517/Sohankp-city-graph/fastapi-app:$SHORT_SHA'
     - '--region'
-    - 'global' # <-- The region for your service
+    - 'asia-south1' # <-- The region for your service
     - '--platform'
     - 'managed'
     - '--allow-unauthenticated' # Allows public access. Remove for private services.
