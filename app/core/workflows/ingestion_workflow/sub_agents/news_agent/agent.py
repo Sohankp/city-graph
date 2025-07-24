@@ -7,13 +7,15 @@ import os
 
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 
+
 genai.configure(api_key="AIzaSyABScX7i7ATruOWy-DorTxz2Sm9A4_BZqw")  # Replace with your key
 model = genai.GenerativeModel("gemini-2.5-pro")
 
 
 NEWS_SOURCES = [
     "https://www.thehindu.com/news/cities/bangalore/",
-    "https://timesofindia.indiatimes.com/city/bangalore"
+    "https://timesofindia.indiatimes.com/city/bangalore",
+    "https://indianexpress.com/section/cities/bangalore/"
 ]
 
 
@@ -27,8 +29,14 @@ def extract_links(source_url):
             return [tag.a["href"] for tag in articles if tag.a]
         elif "timesofindia" in source_url:
             return [a["href"] for a in soup.select("a[href*='/city/bengaluru/']") if a.get("href")]
+        # elif "btp" in source_url:
+        #     for div in soup.find_all('div', class_='scroll-content3'):
+        #         links = [a_tag["href"] for a_tag in div.find_all('a', href=True)]
+        #     return links
         elif "indianexpress" in source_url:
-            return [a["href"] for a in soup.select("a.card") if a.get("href")]
+            articles = soup.find_all("li") 
+            links = [tag.a["href"] for tag in articles if tag.a and "/article/cities/bangalore/" in tag.a["href"]]
+            return links
     except:
         return []
 
@@ -88,8 +96,9 @@ Article:
 
 
 def scrape_bangalore_news() -> str:
+
     """
-   Scrapes Bangalore-related news from top Indian news sites,
+    Scrapes Bangalore-related news from top Indian news sites,
     analyzes relevance using Gemini, and returns readable summaries.
     Returns:
         str: A string in the below format
@@ -99,11 +108,13 @@ def scrape_bangalore_news() -> str:
         - sentiment: Psitive/Negative/Neutral
         - location: Primary location + nearby areas
         - advisory: Any warning or guidance for public
+
     """
+    
     results = []
     for source in NEWS_SOURCES:
         links = extract_links(source)
-        for link in links[:2]:  # Limit to 5 per site
+        for link in links:  
             content = extract_article_content(link)
             if not content:
                 continue
@@ -114,7 +125,10 @@ def scrape_bangalore_news() -> str:
 
     if not results:
         return "No Bangalore-related news found at the moment."
+
     return "\n\n".join(results)
+
+
 
 news_agent = Agent(
     name="news_agent",
@@ -125,4 +139,5 @@ news_agent = Agent(
         including category, sentiment, timestamp, location, and advisory."""),
     tools=[scrape_bangalore_news],
     output_key="news_summary"
+
 )
