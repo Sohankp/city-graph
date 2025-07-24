@@ -17,6 +17,7 @@ async def lifespan(app: FastAPI):
     scheduler.start()
     yield
     # Code to run on shutdown
+    scheduler.shutdown(wait=False)
     print("Shutting down the City Graph API...")
 
 
