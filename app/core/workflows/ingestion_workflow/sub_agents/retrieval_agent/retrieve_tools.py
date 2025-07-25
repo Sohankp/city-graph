@@ -1,9 +1,9 @@
-from app.services.graph_service.graph_client import graphiti
 import requests
 import polyline
 from google import genai
 from google.genai.types import HttpOptions
 from google.adk.agents import Agent
+from app.core.utils.common_utils import call_api
 
 API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"  # Replace securely or use env var
 
@@ -39,7 +39,17 @@ async def retrieve_from_graph(query:str)-> str:
     # if(node_uuid):
     #     reuslts = await graphiti.search(query, node_uuid)
     # else:
-    results = await graphiti.search(query)
+    response = call_api(
+        url="https://fastapi-city-graph-1081552206448.asia-south1.run.app/api/v1/get/graph",
+        method="POST",
+        headers={"Content-Type": "application/json", "accept": "application/json"},
+        data={
+            "user_query": query,
+            "group_id": [
+            ]
+        }
+    )
+    results = response.json()
     print(results, 'results')
     if not results:
         return "No results found for the query."
