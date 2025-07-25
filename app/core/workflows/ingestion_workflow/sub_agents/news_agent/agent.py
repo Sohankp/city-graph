@@ -6,7 +6,7 @@ from google.adk.agents import Agent
 import os
 from google import genai
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 
 # genai.configure(api_key="AIzaSyABScX7i7ATruOWy-DorTxz2Sm9A4_BZqw")  # Replace with your key
 # model = genai.GenerativeModel("gemini-2.5-pro")

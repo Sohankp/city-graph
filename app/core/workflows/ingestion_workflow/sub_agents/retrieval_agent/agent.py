@@ -6,7 +6,7 @@ from app.core.workflows.ingestion_workflow.sub_agents.retrieval_agent.retrieve_t
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph/city-graph-466517-5bdbc7e0c25e.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph/city-graph-466517-5bdbc7e0c25e.json"
 
 system_prompt ="""
 You are a Smart City Agent for Bengaluru, designed to provide comprehensive and up-to-date information about the city. Your primary goal is to answer user questions intelligently by leveraging real-time data and mapping capabilities.

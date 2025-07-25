@@ -7,7 +7,7 @@ import requests
 TWITTER_BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAAL%2BM3AEAAAAAStPyuEzvGW1Z2R9xsDzQ3GZ8DOk%3DaeA6s7eM9Twgm0nFIdVld7mBno6IDu0COkSPwhmdvuZmwlQZJe'
 GOOGLE_MAPS_API_KEY = 'AIzaSyBqXRmYQJPiIUFXKt0Z125e4fgES-hszRg'
 
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 
 def geocode_location(location):
     if not location or location == 'Unknown':
