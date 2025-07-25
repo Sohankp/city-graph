@@ -46,4 +46,7 @@ async def extraction_pipeline(query:str):
     for key, value in final_session.state.items():
         print(f"{key}: {value}")
 
-    return interaction_history[-1]['response'] 
+    # Return the agent's response from the last interaction
+    if interaction_history and 'response' in interaction_history[-1]:
+        return interaction_history[-1]['response']
+    return None

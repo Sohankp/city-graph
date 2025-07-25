@@ -4,7 +4,9 @@ from google import genai
 from google.genai.types import HttpOptions
 from google.adk.agents import Agent
 from app.core.utils.common_utils import call_api
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
+import os
+
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
 API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"
 
 client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
