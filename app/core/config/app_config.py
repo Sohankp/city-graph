@@ -22,15 +22,8 @@ class AppConfig(BaseSettings):
     app_name: str = "City Graph"
     version: str = "1.0.0"
     debug: bool = True
-    gemini_api_key: str = Field(alias="GEMINI_API_KEY")
-    twitter_bearer_token: str = Field(alias="TWITTER_BEARER_TOKEN")
-    google_maps_api_key: str = Field(alias="GOOGLE_MAPS_API_KEY")
-
 try:
     app_config = AppConfig()
-    app_config.gemini_api_key = get_secret("GEMINI_API_KEY")
-    app_config.twitter_bearer_token = get_secret("TWITTER_BEARER_TOKEN")
-    app_config.google_maps_api_key = get_secret("GOOGLE_MAPS_API_KEY")
 
 except Exception as e:
     raise RuntimeError(f"Failed to load application configuration: {e}")
