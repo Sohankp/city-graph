@@ -4,7 +4,6 @@ from google import genai
 from google.genai.types import HttpOptions
 from google.adk.agents import Agent
 from app.core.utils.common_utils import call_api
-import os
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
 API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"
 
@@ -51,41 +50,47 @@ async def retrieve_from_graph(query:str)-> str:
             ]
         }
     )
-    print(response, 'response')
+    # Write response to a file for debugging
     # Fix: handle both dict and requests.Response
-    if hasattr(response, "json"):
-        results = response.json()
-    else:
-        results = response
-    print(results, 'results')
+    # if hasattr(response, "json"):
+    #     results = response.json()
+    # else:
+    #     results = response
+    # print(results, 'results')
     # Handle API error responses (e.g., timeout)
-    if isinstance(results, dict) and "error" in results:
-        return f"Graph API error: {results['error']}"
-    if not results:
-        return "No results found for the query."
-    else:
-        for result in results:
-            print(f'UUID: {result.uuid}')
-            print(f'Fact: {result.fact}')
-            if hasattr(result, 'valid_at') and result.valid_at:
-                print(f'Valid from: {result.valid_at}')
-            if hasattr(result, 'invalid_at') and result.invalid_at:
-                print(f'Valid until: {result.invalid_at}')
-            print('---')
-            response_dict[result.uuid] = {
-                "fact": result.fact,
-                "valid_at": result.valid_at if hasattr(result, 'valid_at') else None,
-                "invalid_at": result.invalid_at if hasattr(result, 'invalid_at') else None
-            }
-        print(response_dict,'response_dict')
-        prompt_filled = prompt.replace("{original_user_query}", query)
-        prompt_filled = prompt_filled.replace("{retrieved_data_from_graph}", str(response_dict))
-        response = client.models.generate_content(
-                        model="gemini-2.5-flash",
-                        contents=prompt_filled,
-                    )
-        print(response.text.strip())
-        return str(response.text.strip())
+    for res in response:
+        res.pop("attributes", None)
+    # with open("graph_response_debug.json", "w", encoding="utf-8") as f:
+    #     json.dump(response, f, ensure_ascii=False, indent=2)
+    # print(response,'resultssss')
+    # time.sleep(10)
+    # if isinstance(results, dict) and "error" in results:
+    #     return f"Graph API error: {results['error']}"
+    # if not results:
+    #     return "No results found for the query."
+    # else:
+    #     for result in results:
+    #         print(f'UUID: {result.uuid}')
+    #         print(f'Fact: {result.fact}')
+    #         if hasattr(result, 'valid_at') and result.valid_at:
+    #             print(f'Valid from: {result.valid_at}')
+    #         if hasattr(result, 'invalid_at') and result.invalid_at:
+    #             print(f'Valid until: {result.invalid_at}')
+    #         print('---')
+    #         response_dict[result.uuid] = {
+    #             "fact": result.fact,
+    #             "valid_at": result.valid_at if hasattr(result, 'valid_at') else None,
+    #             "invalid_at": result.invalid_at if hasattr(result, 'invalid_at') else None
+    #         }
+    #     print(response_dict,'response_dict')
+    prompt_filled = prompt.replace("{original_user_query}", query)
+    prompt_filled = prompt_filled.replace("{retrieved_data_from_graph}", str(response))
+    response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt_filled,
+                )
+    print(response.text.strip())
+    return str(response.text.strip())
     
 
 

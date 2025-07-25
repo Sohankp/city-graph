@@ -46,4 +46,4 @@ async def extraction_pipeline(query:str):
     for key, value in final_session.state.items():
         print(f"{key}: {value}")
 
-    # return interaction_history[-1]['response'] 
+    return interaction_history[-1]['response'] 
