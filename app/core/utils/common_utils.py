@@ -1,7 +1,7 @@
 import requests
 
 
-def call_api(url, method='GET', params=None, data=None, headers=None, timeout=10):
+def call_api(url, method='GET', params=None, data=None, headers=None, timeout=30):
     """
     Calls an API endpoint.
 

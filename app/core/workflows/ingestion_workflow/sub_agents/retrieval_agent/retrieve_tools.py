@@ -4,10 +4,12 @@ from google import genai
 from google.genai.types import HttpOptions
 from google.adk.agents import Agent
 from app.core.utils.common_utils import call_api
+import os
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
+API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"
 
-API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"  # Replace securely or use env var
+client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
 
-client = genai.Client(  vertexai=True, project="city-graph-466517",location="global")
 prompt ="""
 You are an intelligent assistant tasked with interpreting raw data retrieved from a graph database to answer a specific user question about Bengaluru.
 
@@ -49,8 +51,16 @@ async def retrieve_from_graph(query:str)-> str:
             ]
         }
     )
-    results = response.json()
+    print(response, 'response')
+    # Fix: handle both dict and requests.Response
+    if hasattr(response, "json"):
+        results = response.json()
+    else:
+        results = response
     print(results, 'results')
+    # Handle API error responses (e.g., timeout)
+    if isinstance(results, dict) and "error" in results:
+        return f"Graph API error: {results['error']}"
     if not results:
         return "No results found for the query."
     else:
@@ -144,4 +154,3 @@ async def get_route_areas(origin: str, destination: str) -> str:
     )
     return summary
 
-    

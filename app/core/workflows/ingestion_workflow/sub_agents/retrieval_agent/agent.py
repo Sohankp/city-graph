@@ -1,10 +1,8 @@
-import pandas as pd
 from google.adk.agents import Agent
 import os
 from pydantic import RootModel
 from typing import Dict, List
 from app.core.workflows.ingestion_workflow.sub_agents.retrieval_agent.retrieve_tools import retrieve_from_graph, get_route_areas
-from app.services.graph_service.graph_client import graphiti
 from google.adk.runners import Runner
 from google.adk.sessions import InMemorySessionService
 
