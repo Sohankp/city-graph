@@ -16,7 +16,7 @@ steps:
   args:
     - 'run'
     - 'deploy'
-    - 'fastapi-city-graph' # <-- (Required) Name your service, e.g., 'city-graph-api'
+    - 'fastapi-city-graph-apis' # <-- (Required) Name your service, e.g., 'city-graph-api'
     - '--image'
     - 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-apis/fastapi-app:$SHORT_SHA'
     - '--region'
