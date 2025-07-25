@@ -2,8 +2,7 @@ from google.adk.agents import Agent
 from pydantic import RootModel
 from typing import Dict, List
 from datetime import datetime
-from app.services.graph_service.graph_client import graphiti
-from app.services.graph_service.graph_schemas import entity_types, edge_types, edge_type_map
+from app.core.utils.common_utils import call_api
 
 class NewsContent(Dict[str, List[str]]):
     pass
@@ -28,15 +27,17 @@ async def ingest_news(news_content: dict) -> str:
         for category in news_content.keys():
             for article in news_content[category]:
                 print(f"Ingesting article in category '{category}': {article}")
-                await graphiti.add_episode(
-                    name="City Update",
-                    episode_body=article,
-                    source_description="Banglore city news updates",
-                    reference_time=datetime.now(),
-                    group_id=category,
-                    entity_types=entity_types,
-                    edge_types=edge_types,
-                    edge_type_map=edge_type_map
+                url = "https://fastapi-city-graph-1081552206448.asia-south1.run.app/api/v1/add/episode"
+                call_api(
+                    url=url,
+                    method="POST",
+                    headers={"Content-Type": "application/json", "accept": "application/json"},
+                    data={
+                        "name": "City Updates",
+                        "episode_body": article,
+                        "source_description": "Banglore city news updates",
+                        "group_id": category
+                    }
                 )
         return "News content ingested successfully."
     except Exception as e:
