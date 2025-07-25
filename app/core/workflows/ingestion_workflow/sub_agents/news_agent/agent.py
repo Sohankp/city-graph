@@ -15,7 +15,8 @@ client = genai.Client(  vertexai=True, project="city-graph-466517",location="glo
 
 NEWS_SOURCES = [
     "https://www.thehindu.com/news/cities/bangalore/",
-    "https://timesofindia.indiatimes.com/city/bangalore"
+    "https://timesofindia.indiatimes.com/city/bangalore",
+    "https://indianexpress.com/section/cities/bangalore"
 ]
 
 
@@ -29,8 +30,14 @@ def extract_links(source_url):
             return [tag.a["href"] for tag in articles if tag.a]
         elif "timesofindia" in source_url:
             return [a["href"] for a in soup.select("a[href*='/city/bengaluru/']") if a.get("href")]
+        # elif "btp" in source_url:
+        #     for div in soup.find_all('div', class_='scroll-content3'):
+        #         links = [a_tag["href"] for a_tag in div.find_all('a', href=True)]
+        #     return links
         elif "indianexpress" in source_url:
-            return [a["href"] for a in soup.select("a.card") if a.get("href")]
+            articles = soup.find_all("li") 
+            links = [tag.a["href"] for tag in articles if tag.a and "/article/cities/bangalore/" in tag.a["href"]]
+            return links
     except:
         return []
 
@@ -53,7 +60,7 @@ def analyze_with_gemini(text, link):
     """Pass article content to Gemini for summarization and tagging"""
     prompt = f"""
 You are an intelligent news extractor and analyzer for Bengaluru and its surrounding regions.
-Given the following news article , determine if it's related to Bangalore city or any locality in Bangalore. Perform these tasks and return the results as clearly formatted text:
+Given the following news article and its URL, determine if it's related to Bangalore city or any locality in Bangalore. Perform these tasks and return the results as clearly formatted text:
 
 Summarization:
 Provide a clear, concise summary of the main event or issue in 2–3 lines.
@@ -75,6 +82,8 @@ Clearly state the main location mentioned in the article where the event occurre
 
 If not relevant to Bangalore, respond with:
 is_bangalore_related:   
+
+URL: {link}
 
 Article:
 {text}
@@ -110,7 +119,7 @@ def scrape_bangalore_news() -> str:
     results = []
     for source in NEWS_SOURCES:
         links = extract_links(source)
-        for link in links[:2]:  # Limit to 5 per site
+        for link in links:  # Limit to 5 per site
             content = extract_article_content(link)
             if not content:
                 continue
