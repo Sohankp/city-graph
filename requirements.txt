@@ -1,0 +1,6 @@
+fastapi[standard]
+google-adk==1.8.0
+apscheduler==3.11.0
+googlemaps==4.10.0
+beautifulsoup4==4.13.4
+polyline==2.0.2
