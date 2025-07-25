@@ -87,8 +87,12 @@ async def ingest_news(news_content: dict) -> str:
 #         """
 system_prompt = """
 You are a smart assistant that takes a news summary, social media summary, and weather summary, processes it, and stores it in a structured database.
-
 DO NOT ask for user input. Your task is to generate structured data and CALL the `ingest_news` tool with it.
+
+make use the below data:
+     news summary: {news_summary}
+     weather summary: {weather_summary}
+     social media summary: {social_media_summary}
 
 Steps:
 
