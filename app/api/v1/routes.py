@@ -1,5 +1,5 @@
 from fastapi import APIRouter 
-from app.api.v1.controllers import ping, retrieve_graph, upload_image, retrieve_overall_summary
+from app.api.v1.controllers import ping, retrieve_graph, upload_image, retrieve_overall_summary, retrieve_mood_map
 from app.api.v1.models import PingPayload, RetrivePayload, UploadImagePayload
 
 router = APIRouter()    
@@ -20,3 +20,7 @@ async def post_upload_image(payload: UploadImagePayload):
 @router.post("/get/overall/summary")
 async def get_overall_summary():
     return await retrieve_overall_summary()
+
+@router.get("/mood/map")
+async def get_mood_map():
+    return await retrieve_mood_map()

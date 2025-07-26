@@ -5,7 +5,9 @@ from app.core.utils.common_utils import call_api
 from google import genai
 import os
 import json
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
+from app.core.workflows.ingestion_workflow.sub_agents.retrieval_agent.retrieve_tools import geocode_area, get_weather_by_coords
+
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
 
 async def ping(payload: PingPayload):
@@ -36,7 +38,6 @@ async def upload_image(payload: UploadImagePayload):
     - Public Events
     - Safety
     - Public Transport
-    - Civic Issues
 
     give me a json object like this:
     {{
@@ -72,7 +73,7 @@ async def upload_image(payload: UploadImagePayload):
     return {'response': f"Image uploaded successfully. Category: {category}, Summary: {summary}"}
 
 async def retrieve_overall_summary():
-    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport', 'Civic issues']
+    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport']
     response_dict  ={}
     for i in categories:
         response = call_api(
