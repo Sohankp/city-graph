@@ -1,4 +1,5 @@
 import os
+import json
 from google.genai import types
 from google import genai
 
@@ -27,4 +28,4 @@ def generate_response(prompt: str) -> str:
         model="gemini-2.5-flash",
             contents=prompt,
         )
-    return response.text.strip()
+    return json.loads(response.text.strip())
