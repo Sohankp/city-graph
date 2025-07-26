@@ -4,8 +4,10 @@ from app.services.gemini import summarize_image, generate_response
 from app.core.utils.common_utils import call_api
 from google import genai
 import os
+import json
+from app.core.workflows.ingestion_workflow.sub_agents.retrieval_agent.retrieve_tools import geocode_area, get_weather_by_coords
 
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
 
 async def ping(payload: PingPayload):
@@ -114,4 +116,70 @@ async def retrieve_overall_summary():
                     contents=prompt,
                 )
     return str(response.text.strip())
+
+async def retrieve_mood_map():
+    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport', 'Civic issues']
+    response_list = []
+    for i in categories:
+        response = call_api(
+        url="https://fastapi-city-graph-1081552206448.asia-south1.run.app/api/v1/get/graph",
+        method="POST",
+        headers={"Content-Type": "application/json", "accept": "application/json"},
+        data={
+            "user_query": "Give me the most recent information about the {i} category",
+            "group_id": [i]
+        }
+        )
+        for res in response:
+            res.pop("attributes", None)
+        response_list.append(response)
+
+    final_data = str(response_list)
+
+    prompt = f"""
+    You will be provided with a final list containing data retrieved from the graph for various areas of Bengaluru city. 
+    this data will be used to create mood map for the city. 
+    Your task is to analyze the data and generate a concise summary of the key insights along with the city name.
+
+    For each news summary, provide me the city name and a mood associated with it from the below moods:
+    - positive
+    - negative
+    - neutral
+
+    DO NOT include news like:
+    - Complaints or opinions about commuting in general  
+    - Sarcastic, funny, or emotional venting  
+    - News about new transport services, plans, launches, or fares  
+    - Civic rants about hospitals, services, companies  
+    - Promotions or medical news 
+
+    give it in the below format:
+    [{{
+        "news_summary":"summary",
+        "mood":"positive",
+        "area":"Koramangala"
+    }}, {{...}}, ...
+    ]
+
+    IMPORTANT: Do not include any additional text or explanations or ``` or any markdown format, just return the plain JSON object.
+
+    Here is the data you need to analyze:
+    {final_data}
+    """
+    response = client.models.generate_content(
+                    model="gemini-2.5-flash",
+                    contents=prompt,
+                )
+
+    mood_data = json.loads(response.text.strip())
+    results = []
+    for mood in mood_data:
+        lat, lng = geocode_area(mood['area'])
+        results.append({
+            **mood,
+            "latitude":lat,
+            "longitude":lng,
+            "weather": get_weather_by_coords(lat, lng)
+        })
+    return results
     
