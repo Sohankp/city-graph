@@ -117,9 +117,10 @@ Steps:
     "Weather": ["summary1", "summary2"],
     "Traffic": ["summary3"],
     "Infrastructure": ["summary4", "summary5"],
-    "Events": ["summary6"],
+    "Public Events": ["summary6"],
     "Safety": ["summary7"],
-    "Entire City": ["summary8"]
+    "Public Transport": ["summary8"],
+    "Civic Issue": ["summary9", "summary10"]
 }
 6. Call the ingest_news tool like this:
 ingest_news(news_content={
