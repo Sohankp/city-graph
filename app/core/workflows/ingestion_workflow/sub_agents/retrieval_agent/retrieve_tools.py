@@ -5,6 +5,8 @@ from google.genai.types import HttpOptions
 from google.adk.agents import Agent
 from app.core.utils.common_utils import call_api
 import os
+import googlemaps
+import json
 
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
 API_KEY = "AIzaSyAo1gro9w_hIvLkEeeJiH2TB7W0nB0oSQQ"
@@ -31,7 +33,7 @@ You are an intelligent assistant tasked with interpreting raw data retrieved fro
 **Your Answer:**
 """
 
-async def retrieve_from_graph(query:str)-> str:
+async def retrieve_from_graph(query:str, categories: list[str])-> str:
     """Retrieves data from the graph based on the provided query and optional node UUId"""
     print(f"Querying the graph with: {query}")
 
@@ -42,14 +44,14 @@ async def retrieve_from_graph(query:str)-> str:
     # if(node_uuid):
     #     reuslts = await graphiti.search(query, node_uuid)
     # else:
+    print(categories,'categories')
     response = call_api(
         url="https://fastapi-city-graph-1081552206448.asia-south1.run.app/api/v1/get/graph",
         method="POST",
         headers={"Content-Type": "application/json", "accept": "application/json"},
         data={
             "user_query": query,
-            "group_id": [
-            ]
+            "group_id": categories
         }
     )
     # Write response to a file for debugging
@@ -85,6 +87,7 @@ async def retrieve_from_graph(query:str)-> str:
     #             "invalid_at": result.invalid_at if hasattr(result, 'invalid_at') else None
     #         }
     #     print(response_dict,'response_dict')
+    print(response, 'response from graph')
     prompt_filled = prompt.replace("{original_user_query}", query)
     prompt_filled = prompt_filled.replace("{retrieved_data_from_graph}", str(response))
     response = client.models.generate_content(
@@ -161,3 +164,70 @@ async def get_route_areas(origin: str, destination: str) -> str:
     )
     return summary
 
+GOOGLE_MAPS_API_KEY = 'AIzaSyBqXRmYQJPiIUFXKt0Z125e4fgES-hszRg'
+WEATHERAPI_KEY = 'a7b796a8885b4e78af3103559251907'
+
+gmaps = googlemaps.Client(key=GOOGLE_MAPS_API_KEY)
+
+def geocode_area(area_name):
+    geocode_result = gmaps.geocode(f"{area_name}, Bangalore, India")
+    if geocode_result:
+        location = geocode_result[0]['geometry']['location']
+        return location['lat'], location['lng']
+    return None, None
+
+def get_weather_by_coords(lat, lng):
+    url = f"http://api.weatherapi.com/v1/current.json?key={WEATHERAPI_KEY}&q={lat},{lng}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        data = response.json()
+        return {
+            'description': data['current']['condition']['text'],
+            'temperature_C': data['current']['temp_c'],
+            'humidity': data['current']['humidity'],
+            'wind_speed_kph': data['current']['wind_kph'],
+            'feelslike_C': data['current']['feelslike_c']
+        }
+    return None
+
+
+def collect_weather_data(bangalore_areas: list[str]) -> str:
+    """
+
+    For each area in the list of Bangalore neighborhoods, this function:
+        - Geocodes the area to obtain latitude and longitude.
+        - Fetches current weather data for the coordinates.
+        - Aggregates the weather information into a record.
+
+    Returns:
+        str: A JSON-formatted string containing a list of weather records. Each record includes:
+            - area (str): Name of the area.
+            - latitude (float): Latitude of the area.
+            - longitude (float): Longitude of the area.
+            - weather_description (str): Description of the current weather.
+            - temperature_C (float): Temperature in Celsius.
+            - humidity (float): Humidity percentage.
+            - wind_speed_kph (float): Wind speed in kilometers per hour.
+            - feelslike_C (float): 'Feels like' temperature in Celsius.
+
+    Note:
+        This function depends on the external functions `geocode_area` and `get_weather_by_coords`.
+    """
+    # bangalore_areas = ['Koramangala', 'Whitefield', 'Electronic City', 'Hebbal', 'Indiranagar', 'MG Road', 'Marathahalli']
+    records = []
+    for area in bangalore_areas:
+        lat, lng = geocode_area(area)
+        if lat and lng:
+            weather = get_weather_by_coords(lat, lng)
+            if weather:
+                records.append({
+                    'area': area,
+                    'latitude': lat,
+                    'longitude': lng,
+                    'weather_description': weather['description'],
+                    'temperature_C': weather['temperature_C'],
+                    'humidity': weather['humidity'],
+                    'wind_speed_kph': weather['wind_speed_kph'],
+                    'feelslike_C': weather['feelslike_C']
+                })
+    return json.dumps(records)
