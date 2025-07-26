@@ -38,7 +38,6 @@ async def upload_image(payload: UploadImagePayload):
     - Public Events
     - Safety
     - Public Transport
-    - Civic Issues
 
     give me a json object like this:
     {{
@@ -74,7 +73,7 @@ async def upload_image(payload: UploadImagePayload):
     return {'response': f"Image uploaded successfully. Category: {category}, Summary: {summary}"}
 
 async def retrieve_overall_summary():
-    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport', 'Civic issues']
+    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport']
     response_dict  ={}
     for i in categories:
         response = call_api(
@@ -118,7 +117,7 @@ async def retrieve_overall_summary():
     return str(response.text.strip())
 
 async def retrieve_mood_map():
-    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport', 'Civic issues']
+    categories = ['Weather','Traffic', 'Infrastructure', 'Public Events','Safety', 'Public Transport']
     response_list = []
     for i in categories:
         response = call_api(

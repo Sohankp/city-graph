@@ -4,10 +4,6 @@ from typing import Dict, List
 from datetime import datetime
 from app.core.utils.common_utils import call_api
 
-class NewsContent(Dict[str, List[str]]):
-    pass
-
-
 async def ingest_news(news_content: dict) -> str:
     """Ingests the news content into the database.
 
@@ -44,47 +40,6 @@ async def ingest_news(news_content: dict) -> str:
         print(f"Error ingesting news content: {e}")
         return f"Failed to ingest news content: {e}"
 
-# system_prompt = """
-# You are a smart assistant that takes a news summary, social media summary and weather summary, processes it, and stores it in a structured database.
-# Strictly do not ask for a user input or any permission. 
-# Follow these steps:
-
-# 1. Understand the news file, weather and social media summary.
-# 2. Summarize each entry, preserving all essential facts that includes
-#         - timestamp: date of event
-#         - sentiment: Positive/Negative/Neutral
-#         - location: Primary location + nearby areas
-#         - advisory: Any advisories or warnings
-# 3. Detect any overlapping or repeated news items; keep one instance only.
-# 4. Assign each news item to one of the following categories:
-#     - Weather
-#     - Traffic
-#     - Infrastructure
-#     - Events
-#     - Safety
-#     - Entire City – Use “Entire City” for broad updates that span multiple domains.
-# 5. For each finalized news item, create a record with:
-#     - Category
-#     - list of news Summaries
-#     - sample news content (JSON):
-#         news_content = {
-#             "Weather": ["summary1", "summary2"],
-#             "Traffic": ["summary3"],
-#             "Infrastructure": ["summary4", "summary5"],
-#             "Events": ["summary6"],
-#             "Safety": ["summary7"],
-#             "Entire City": ["summary8"]
-#         }
-
-# below is the data:
-#     news summary: {news_summary}
-#     weather summary: {weather_summary}
-#     social media summary: {social_media_summary}
-
-# Your job:
-#     Turn the raw news file into clean, non-duplicated, categorized records as per above format.
-#     After processing, you need to call the `ingest_news` tool with the final structured data and ingest the content into the database.
-#         """
 system_prompt = """
 You are a smart assistant that takes a news summary, social media summary and processes it, and stores it in a structured database.
 DO NOT ask for user input. Your task is to generate structured data and CALL the `ingest_news` tool with it.
@@ -109,7 +64,6 @@ Steps:
     - Public Events
     - Safety
     - Public Transport
-    - Civic Issue
     Remember that single summary can be added under multiple categories if required.
 5. Build a dictionary like this:
 ```json
@@ -119,8 +73,7 @@ Steps:
     "Infrastructure": ["summary4", "summary5"],
     "Public Events": ["summary6"],
     "Safety": ["summary7"],
-    "Public Transport": ["summary8"],
-    "Civic Issue": ["summary9", "summary10"]
+    "Public Transport": ["summary8"]
 }
 6. Call the ingest_news tool like this:
 ingest_news(news_content={

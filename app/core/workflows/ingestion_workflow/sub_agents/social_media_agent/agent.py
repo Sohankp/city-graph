@@ -62,7 +62,6 @@ def fetch_tweets() -> list[dict]:
     print ("Tweets: ",tweets)
     return tweets
 
-# Agent prompt
 system_prompt = f"""
 You are a strict and intelligent Bangalore traffic and public event analyzer for social media.
 
@@ -83,7 +82,6 @@ Respond with -
 No news related to Bangalore traffic or any events nearby.
 """
 
-# Initialize agent
 social_media_agent = Agent(
     name="social_media_agent",
     model="gemini-2.5-flash",
@@ -92,5 +90,3 @@ social_media_agent = Agent(
     tools=[fetch_tweets],
     output_key="social_media_summary"
 )
-
-# Main execution
