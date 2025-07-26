@@ -1,5 +1,5 @@
 from fastapi import APIRouter 
-from app.api.v1.controllers import ping, retrieve_graph, upload_image
+from app.api.v1.controllers import ping, retrieve_graph, upload_image, retrieve_overall_summary
 from app.api.v1.models import PingPayload, RetrivePayload, UploadImagePayload
 
 router = APIRouter()    
@@ -16,3 +16,7 @@ async def post_retrive_graph(paylaod: RetrivePayload):
 @router.post("/upload/image")
 async def post_upload_image(payload: UploadImagePayload):
     return await upload_image(payload)
+
+@router.post("/get/overall/summary")
+async def get_overall_summary():
+    return await retrieve_overall_summary()
