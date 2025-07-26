@@ -107,11 +107,13 @@ async def retrieve_overall_summary():
     }}
     Here is the data you need to analyze:
     {final_json}
+
+    IMPORTANT: Do not include any additional text or explanations or ``` or any markdown format, just return the plain JSON object.
     """
     print(prompt, 'prompt')
     response = client.models.generate_content(
                     model="gemini-2.5-flash",
                     contents=prompt,
                 )
-    return json.load(response.text.strip())
+    return json.loads(response.text.strip())
     
