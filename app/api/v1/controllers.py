@@ -4,7 +4,7 @@ from app.services.gemini import summarize_image, generate_response
 from app.core.utils.common_utils import call_api
 from google import genai
 import os
-
+import json
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
 client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
 
@@ -113,5 +113,5 @@ async def retrieve_overall_summary():
                     model="gemini-2.5-flash",
                     contents=prompt,
                 )
-    return str(response.text.strip())
+    return json.load(response.text.strip())
     
