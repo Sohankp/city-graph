@@ -28,16 +28,18 @@ async def upload_image(payload: UploadImagePayload):
     - Weather
     - Traffic
     - Infrastructure
-    - Events
+    - Public Events
     - Safety
-    - Entire City
+    - Public Transport
+    - Civic Issues
 
     give me a json object like this:
-    ```json{{
+    {{
         "category": "Weather",
         "summary": "A brief summary of the image."
-        }}
-    ```
+    }}
+    
+    IMPORTANT: Do not include any additional text or explanations or ``` or any markdown format, just return the plain JSON object.
     """
     prompt = prompt.format(
         summary=summary,
