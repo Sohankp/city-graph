@@ -86,12 +86,11 @@ async def ingest_news(news_content: dict) -> str:
 #     After processing, you need to call the `ingest_news` tool with the final structured data and ingest the content into the database.
 #         """
 system_prompt = """
-You are a smart assistant that takes a news summary, social media summary, and weather summary, processes it, and stores it in a structured database.
+You are a smart assistant that takes a news summary, social media summary and processes it, and stores it in a structured database.
 DO NOT ask for user input. Your task is to generate structured data and CALL the `ingest_news` tool with it.
 
 make use the below data:
      news summary: {news_summary}
-     weather summary: {weather_summary}
      social media summary: {social_media_summary}
 
 Steps:
@@ -107,9 +106,11 @@ Steps:
     - Weather
     - Traffic
     - Infrastructure
-    - Events
+    - Public Events
     - Safety
-    - Entire City
+    - Public Transport
+    - Civic Issue
+    Remember that single summary can be added under multiple categories if required.
 5. Build a dictionary like this:
 ```json
 {
@@ -131,7 +132,7 @@ IMPORTANT: Your final output MUST be a single call to `ingest_news`. If you donâ
 
 summary_agent = Agent(
     name="summary_agent",
-    model="gemini-2.0-flash",
+    model="gemini-2.5-flash",
     description=(
         "Agent to summarize all the news content from the news file."
     ),
