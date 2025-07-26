@@ -17,15 +17,3 @@ root_agent = SequentialAgent(
     sub_agents=[gather_data, summary_agent]
 )
 
-# Create the root ingestion workflow agent
-# root_agent = Agent(
-#     name="Ingestion_Workflow_Agent",
-#     model="gemini-2.0-flash",
-#     description="Ingestion workflow agent for processing news articles",
-#     instruction="""
-#     get the summary of the news file and ingest it into the database.
-#     please don't ask user for any input or permission.
-#     """,
-#     sub_agents=[gather_data, summary_agent],
-#     tools=[],
-# )
