@@ -6,6 +6,7 @@ from google import genai
 import os
 import json
 from app.core.workflows.ingestion_workflow.sub_agents.retrieval_agent.retrieve_tools import geocode_area, get_weather_by_coords
+from app.services.google_agent import ingestion_pipeline
 
 # os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
 client = genai.Client(vertexai=True, project="city-graph-466517", location="global")
@@ -183,4 +184,6 @@ async def retrieve_mood_map():
             "weather": get_weather_by_coords(lat, lng)
         })
     return results
-    
+
+async def ingest_data():
+    await ingestion_pipeline()

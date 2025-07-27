@@ -8,7 +8,7 @@ from google.adk.agents import Agent
 # Securely store your API keys
 TWITTER_BEARER_TOKEN = 'AAAAAAAAAAAAAAAAAAAAABUE3QEAAAAA1dD52XdfpbyDUt3VONkE6pSIEfg%3DR8FbqBVypbcoQ4LKyEPIZgsBQH9M4LjXpDxmDzu8UXE7zVok4f'
 GOOGLE_MAPS_API_KEY = 'AIzaSyBqXRmYQJPiIUFXKt0Z125e4fgES-hszRg'
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "city-graph-466517-5bdbc7e0c25e.json"
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "D:\\city-graph\\city-graph-466517-5bdbc7e0c25e.json"
 
 def geocode_location(location):
     if not location or location == 'Unknown':
