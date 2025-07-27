@@ -16,9 +16,9 @@ The city data is organized into the following categories:
 - Weather
 - Traffic
 - Infrastructure
-- Public Events
+- Public_Events
 - Safety
-- Public Transport
+- Public_Transport
 
 You have access to the following tools:
 

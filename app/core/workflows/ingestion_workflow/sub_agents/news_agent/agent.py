@@ -17,8 +17,8 @@ NEWS_SOURCES = [
 ]
 
 CATEGORIES = [
-    "Traffic", "Weather", "Public Events", 
-     "Infrastructure", "Safety", "Public Transport"
+    "Traffic", "Weather", "Public_Events", 
+     "Infrastructure", "Safety", "Public_Transport"
 ]
 
 def normalize_timestamp(raw_timestamp: str) -> str:
@@ -85,7 +85,7 @@ Summarization:
 Summarize the main event or issue in 2–3 lines.
 
 Categorization:
-Assign **one or more** categories from the following: "Traffic", "Weather", "Public Events", "Infrastructure", "Safety", "Public Transport". If no category fits, use: Category: NA
+Assign **one or more** categories from the following: "Traffic", "Weather", "Public_Events", "Infrastructure", "Safety", "Public_Transport". If no category fits, use: Category: NA
 
 Timestamp:
 Use this timestamp if given: "{timestamp}". If not usable, use today's date.

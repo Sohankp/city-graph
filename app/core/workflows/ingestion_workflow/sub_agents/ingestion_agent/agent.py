@@ -61,9 +61,9 @@ Steps:
     - Weather
     - Traffic
     - Infrastructure
-    - Public Events
+    - Public_Events
     - Safety
-    - Public Transport
+    - Public_Transport
     Remember that single summary can be added under multiple categories if required.
 5. Build a dictionary like this:
 ```json
@@ -71,9 +71,9 @@ Steps:
     "Weather": ["summary1", "summary2"],
     "Traffic": ["summary3"],
     "Infrastructure": ["summary4", "summary5"],
-    "Public Events": ["summary6"],
+    "Public_Events": ["summary6"],
     "Safety": ["summary7"],
-    "Public Transport": ["summary8"]
+    "Public_Transport": ["summary8"]
 }
 6. Call the ingest_news tool like this:
 ingest_news(news_content={

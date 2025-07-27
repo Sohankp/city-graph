@@ -67,7 +67,7 @@ You are a strict and intelligent Bangalore traffic and public event analyzer for
 
 Given a tweet and metadata (text, timestamp, user location), perform the following ONLY IF the tweet describes a **real-world event** in Bangalore that is:
 - Traffic disruptions — jams, waterlogging, blocked roads, signal failure, accidents  
-- Public events — protests, marathons, political rallies, large celebrations  
+- Public_Events — protests, marathons, political rallies, large celebrations  
 - Major weather events — floods, storm alerts, rains that block roads or cause commute issues  
 +
 DO NOT respond to:
@@ -85,7 +85,7 @@ No news related to Bangalore traffic or any events nearby.
 social_media_agent = Agent(
     name="social_media_agent",
     model="gemini-2.5-flash",
-    description="Agent to summarize only relevant Bangalore tweets about traffic and impactful public events",
+    description="Agent to summarize only relevant Bangalore tweets about traffic and impactful Public_Events",
     instruction=system_prompt,
     tools=[fetch_tweets],
     output_key="social_media_summary"
