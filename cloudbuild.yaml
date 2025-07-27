@@ -1,0 +1,35 @@
+#cloudbuild.yaml
+
+steps:
+  # 1. Build the container image.
+  # This uses the correct Artifact Registry path.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-apis/fastapi-app:$SHORT_SHA', '.']
+
+  # 2. Push the container image to your Artifact Registry.
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-apis/fastapi-app:$SHORT_SHA']
+
+  # 3. Deploy the container image to Cloud Run.
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args:
+    - 'run'
+    - 'deploy'
+    - 'fastapi-city-graph-apis' # <-- (Required) Name your service, e.g., 'city-graph-api'
+    - '--image'
+    - 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-apis/fastapi-app:$SHORT_SHA'
+    - '--region'
+    - 'asia-south1' # <-- Correct region
+    - '--platform'
+    - 'managed'
+    - '--allow-unauthenticated'
+    - '--service-account'
+    - '1081552206448-compute@developer.gserviceaccount.com' # <-- (Required) The email of the service account for Cloud Run
+    - '--set-env-vars'
+    - 'GOOGLE_GENAI_USE_VERTEXAI=True,GOOGLE_CLOUD_PROJECT=city-graph-466517,GOOGLE_CLOUD_LOCATION=global'
+images:
+  - 'asia-south1-docker.pkg.dev/city-graph-466517/city-graph-apis/fastapi-app:$SHORT_SHA'
+
+options:
+  logging: CLOUD_LOGGING_ONLY
