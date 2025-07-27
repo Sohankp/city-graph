@@ -29,10 +29,10 @@ Use this as your first source of information. Based on the user's query, determi
 Note - while passing the categories list to the graph retrieval tool ensure you need to pass the exact category names as they are defined above as it is case sensitive.
 
 Weather Tool  
-Use this if the user’s query involves weather-related concerns in specific areas. Provide a list of those area names to retrieve current conditions.
+Must use this if the user’s query involves weather-related concerns in specific areas. Provide a list of those area names to retrieve current conditions.
 
 Traffic Tool  
-Use this **only if the query requires live, route-specific traffic information**, and only **after** checking the Graph. You must provide both an origin and a destination. If the user hasn’t mentioned the origin, you may ask them for it — but only if it’s essential.
+Must use this **if the query requires live, route-specific traffic information**. You must provide both origin and a destination.
 
 Workflow:
 
